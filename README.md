@@ -12,9 +12,7 @@ This program relies on API provided by Salamek/huawei-lte-api
 
 ## INSTALLATION
 ```sh
- git clone git@github.com:octave21/huawei-lte.git
-```
-```sh
+git clone git@github.com:octave21/huawei-lte.git
 cd huawei-lte
 ```
 ```sh
