@@ -14,27 +14,27 @@ This program relies on API provided by Salamek/huawei-lte-api
 ```sh
  git clone git@github.com:octave21/huawei-lte.git
 ```
-'''sh
+```sh
 cd huawei-lte
-'''
-'''sh
+```
+```sh
 pip install -r requirements.txt
-'''
-'''sh
+```
+```sh
 chmod u+x lte.py
-'''
+```
 
 ##LAUNCH
-'''sh
+```sh
 ./lte.py ip password stat|800|1800|2100|2600
-'''
+```
 
 ##Examples
-'''sh
+```sh
 ./lte.py 192.168.8.1 myPassword 800+2100
-'''
-'''sh
+```
+```sh
 ./lte.py 192.168.8.1 myPassword stat
-...
+```
 
 
