@@ -18,12 +18,12 @@ pip install -r requirements.txt
 chmod u+x lte.py
 ```
 
-##LAUNCH
+## LAUNCH
 ```sh
 ./lte.py ip password stat|800|1800|2100|2600
 ```
 
-##Examples
+## Examples
 ```sh
 ./lte.py 192.168.8.1 myPassword 800+2100
 ./lte.py 192.168.8.1 myPassword stat
