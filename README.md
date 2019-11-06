@@ -14,11 +14,7 @@ This program relies on API provided by Salamek/huawei-lte-api
 ```sh
 git clone git@github.com:octave21/huawei-lte.git
 cd huawei-lte
-```
-```sh
 pip install -r requirements.txt
-```
-```sh
 chmod u+x lte.py
 ```
 
