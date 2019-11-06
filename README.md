@@ -6,8 +6,6 @@ This program relies on API provided by Salamek/huawei-lte-api
 ## REQUIREMENTS
 * python 3
 * curses
-* pip
-* git
 * huawei-lte-api
 
 ## INSTALLATION
