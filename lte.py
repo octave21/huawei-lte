@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "5 novembre 2019"
+version = "6 novembre 2019"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, locale, traceback, curses 
@@ -146,13 +146,17 @@ else :
 	lteband =str(hex(band)).replace("0x", "")
 
 # Set band
-url = "http://admin:" + password + "@" + ip
-connection = AuthorizedConnection(url)
-client = Client(connection)
-networkband = "3FFFFFFF"
-networkmode = "03"
-if band != -1 :
-	client.net.set_net_mode(lteband, networkband, networkmode) 
+try :
+	url = "http://admin:" + password + "@" + ip
+	connection = AuthorizedConnection(url)
+	client = Client(connection)
+	networkband = "3FFFFFFF"
+	networkmode = "03"
+	if band != -1 :
+		client.net.set_net_mode(lteband, networkband, networkmode) 
+except Exception :
+	print("Connexion error")
+	exit()
 
 # Statistics loop
 keyboardThread = Keyboard() # Threads init
