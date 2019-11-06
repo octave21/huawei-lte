@@ -3,12 +3,12 @@
 Set band, show signal level and bandwidth for Huawei mobile broadband router B525s-23a. 
 This program relies on an API provided by Salamek/huawei-lte-api
 
-## REQUIREMENTS
+## Requirements
 * python 3
 * curses
 * huawei-lte-api
 
-## INSTALLATION
+## Installation
 ```sh
 git clone git@github.com:octave21/huawei-lte.git
 cd huawei-lte
@@ -16,7 +16,7 @@ pip install -r requirements.txt
 chmod u+x lte.py
 ```
 
-## LAUNCH
+## Launch
 ```sh
 ./lte.py ip password stat|800|1800|2100|2600
 ```
