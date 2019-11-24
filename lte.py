@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.0"
+version = "2.1.1"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 

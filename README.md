@@ -1,6 +1,6 @@
 # Huawei LTE Band & Monitoring
 
-Set band, show signal level and bandwidth, show monthly traffic for Huawei mobile broadband router B525s-23a. 
+For Huawei mobile broadband router B525s-23a, set band, show signal level and bandwidth, show monthly traffic. 
 This program relies on an API provided by Salamek/huawei-lte-api
 
 ## Requirements
