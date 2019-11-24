@@ -59,10 +59,10 @@ class Stat(Thread) :
 			y += 2
 			win.addstr(y, 1, "Band = " + bandPrint + "Mhz")
 			y += 2
-			win.addstr(y, 1, "Download : " + str(download) + "Mbit/s")
+			win.addstr(y, 1, "Download : " + str(download) + " Mbit/s")
 			win.addstr(y, 25, bar[0 : download % 50]) # Progress bar
 			y += 1
-			win.addstr(y, 1, "Upload :   " + str(upload) + "Mbit/s")
+			win.addstr(y, 1, "Upload :   " + str(upload) + " Mbit/s")
 			win.addstr(y, 25, bar[0 : upload % 50]) # Progress bar
 			y += 2
 			win.addstr(y, 1, "rsrp = " + str(rsrp))
