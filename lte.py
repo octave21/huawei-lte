@@ -2,10 +2,10 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.0.0"
+version = "2.1.0"
 
 #pdb.set_trace() # TRACE
-import sys, pdb, os, base64, time, locale, traceback, curses 
+import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
 from threading import Thread
 from os.path import basename
 from huawei_lte_api.Client import Client
@@ -21,7 +21,7 @@ class Keyboard(Thread) :
 	def run(self):
 		"""Running thread code."""
 		stdscr = curses.initscr()
-		s = stdscr.getstr(11,0,1) # Wait for keyboard press
+		s = stdscr.getstr(15,0,1) # Wait for keyboard press
 		stop = True
 
 # Thread statistics loop
@@ -48,14 +48,21 @@ class Stat(Thread) :
 					if bool(int(bandRead, 16) & int(bandl[3],16)) :
 						bandPrint = bandPrint + bandl[1] + "-" + bandl[2] + " "
 			#print("Band = " + bandPrint + "Mhz, Download : " + str(int(client.monitoring.traffic_statistics()['CurrentDownloadRate'])*8//1000000) + " Mbit/s, Upload : " + str(int(client.monitoring.traffic_statistics()['CurrentUploadRate'])*8//1000000) + " Mbit/s, rsrp = " + str(client.device.signal()["rsrp"]) + ", rsrq = " + str(client.device.signal()["rsrq"]) + ", sinr = " + str(client.device.signal()["sinr"]))
+			# Statistiques
 			download = int(client.monitoring.traffic_statistics()['CurrentDownloadRate'])*8//1000000
 			upload = int(client.monitoring.traffic_statistics()['CurrentUploadRate'])*8//1000000
 			rsrp = client.device.signal()["rsrp"]
 			rsrq = client.device.signal()["rsrq"]
 			sinr = client.device.signal()["sinr"]
+			# Data 
+			stat = client.monitoring.month_statistics()
+			dataUsed = int((int(stat["CurrentMonthDownload"]) + int(stat["CurrentMonthUpload"])) / 1000000000)
+			forfait = int(client.monitoring.start_date()["DataLimit"].replace("GB", ""))	
+			dataAllowed = int((int(stat["MonthDuration"]) / (60 * 60 * 24)) * forfait / 31)
+			# Print screen
 			y = 1
 			win.erase()
-			win.addstr(y, 1, date + " - " + basename(sys.argv[0]))
+			win.addstr(y, 1, date + " - " + basename(sys.argv[0]) + " (" + version + ")")
 			y += 2
 			win.addstr(y, 1, "Band = " + bandPrint + "Mhz")
 			y += 2
@@ -70,6 +77,12 @@ class Stat(Thread) :
 			win.addstr(y, 1, "rsrq = " + str(rsrq))
 			y += 1
 			win.addstr(y, 1, "sinr = " + str(sinr))
+			y += 2
+			win.addstr(y, 1, "Data allowed : " + str(dataAllowed) + " Gbyte")
+			win.addstr(y, 25, bar[0 : dataAllowed]) # Progress bar
+			y += 1
+			win.addstr(y, 1, "Data used :    " + str(dataUsed) + " Gbyte")
+			win.addstr(y, 25, bar[0 : dataUsed]) # Progress bar
 			y += 2
 			win.addstr(y, 1, "Press enter to quit")
 			y += 1
