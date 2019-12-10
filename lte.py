@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.2"
+version = "2.1.3"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -167,8 +167,8 @@ try :
 	networkmode = "03"
 	if band != -1 :
 		client.net.set_net_mode(lteband, networkband, networkmode) 
-except Exception :
-	print("Connexion error")
+except Exception as e :
+	print("Connexion error - " + str(e))
 	exit()
 
 # Statistics loop
