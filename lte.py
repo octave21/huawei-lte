@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.1"
+version = "2.1.2"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -49,14 +49,14 @@ class Stat(Thread) :
 						bandPrint = bandPrint + bandl[1] + "-" + bandl[2] + " "
 			#print("Band = " + bandPrint + "Mhz, Download : " + str(int(client.monitoring.traffic_statistics()['CurrentDownloadRate'])*8//1000000) + " Mbit/s, Upload : " + str(int(client.monitoring.traffic_statistics()['CurrentUploadRate'])*8//1000000) + " Mbit/s, rsrp = " + str(client.device.signal()["rsrp"]) + ", rsrq = " + str(client.device.signal()["rsrq"]) + ", sinr = " + str(client.device.signal()["sinr"]))
 			# Statistiques
-			download = int(client.monitoring.traffic_statistics()['CurrentDownloadRate'])*8//1000000
-			upload = int(client.monitoring.traffic_statistics()['CurrentUploadRate'])*8//1000000
+			download = int(client.monitoring.traffic_statistics()['CurrentDownloadRate'])*8//(1024*1024)
+			upload = int(client.monitoring.traffic_statistics()['CurrentUploadRate'])*8//(1024*1024)
 			rsrp = client.device.signal()["rsrp"]
 			rsrq = client.device.signal()["rsrq"]
 			sinr = client.device.signal()["sinr"]
 			# Data 
 			stat = client.monitoring.month_statistics()
-			dataUsed = int((int(stat["CurrentMonthDownload"]) + int(stat["CurrentMonthUpload"])) / 1000000000)
+			dataUsed = int((int(stat["CurrentMonthDownload"]) + int(stat["CurrentMonthUpload"])) / (1024*1024*1024))
 			forfait = int(client.monitoring.start_date()["DataLimit"].replace("GB", ""))	
 			dataAllowed = int((int(stat["MonthDuration"]) / (60 * 60 * 24)) * forfait / 31)
 			# Print screen
