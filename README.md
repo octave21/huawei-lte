@@ -23,6 +23,7 @@ chmod u+x lte.py
 
 ## Examples
 ```sh
-./lte.py 192.168.8.1 myPassword 800+2100
 ./lte.py 192.168.8.1 myPassword stat
+./lte.py 192.168.8.1 myPassword 800+2100
 ```
+![lte](/lte.png)
