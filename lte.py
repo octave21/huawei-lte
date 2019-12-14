@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.5"
+version = "2.1.6"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -21,7 +21,7 @@ class Keyboard(Thread) :
 	def run(self):
 		"""Running thread code."""
 		stdscr = curses.initscr()
-		s = stdscr.getstr(15,0,1) # Wait for keyboard press
+		s = stdscr.getstr(16,0,1) # Wait for keyboard press
 		stop = True
 
 # Thread statistics loop
@@ -34,7 +34,8 @@ class Stat(Thread) :
 		"""Running thread code."""
 		stdscr = curses.initscr()
 		curses.start_color()
-		curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_RED)
+		curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
+		curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_RED)
 		win = curses.newwin(20, 120, 0, 0)
 		win.scrollok(1)
 		bar = "##################################################################################"
@@ -59,34 +60,49 @@ class Stat(Thread) :
 			dataUsed = int((int(stat["CurrentMonthDownload"]) + int(stat["CurrentMonthUpload"])) / (1024*1024*1024))
 			forfait = int(client.monitoring.start_date()["DataLimit"].replace("GB", ""))	
 			dataAllowed = int((int(stat["MonthDuration"]) / (60 * 60 * 24)) * forfait / 31)
+			delta = dataAllowed - dataUsed 
 			# Print screen
 			y = 1
 			win.erase()
-			win.addstr(y, 1, date + " - " + basename(sys.argv[0]) + " (" + version + ")")
+			win.addstr(y, 1, date + " - " + basename(sys.argv[0]) + " (" + version + ")", curses.color_pair(1))
 			y += 2
-			win.addstr(y, 1, "Band : " + bandPrint + "Mhz")
+			win.addstr(y, 1, "Band : " + bandPrint + "Mhz", curses.color_pair(1))
 			y += 2
-			win.addstr(y, 1, "Download : " + str(download) + " Mbit/s")
-			win.addstr(y, 28, bar[0 : download % 50]) # Progress bar
+			win.addstr(y, 1, "rsrp : " + str(rsrp), curses.color_pair(1))
 			y += 1
-			win.addstr(y, 1, "Upload :   " + str(upload) + " Mbit/s")
-			win.addstr(y, 28, bar[0 : upload % 50]) # Progress bar
+			win.addstr(y, 1, "rsrq : " + str(rsrq), curses.color_pair(1))
+			y += 1
+			win.addstr(y, 1, "sinr : " + str(sinr), curses.color_pair(1))
 			y += 2
-			win.addstr(y, 1, "rsrp : " + str(rsrp))
+			win.addstr(y, 1, "Download :     " + str(download), curses.color_pair(1))
+			win.addstr(y, 20, "Mbit/s", curses.color_pair(1))
+			win.addstr(y, 28, bar[0 : download % 50], curses.color_pair(1)) # Progress bar
 			y += 1
-			win.addstr(y, 1, "rsrq : " + str(rsrq))
-			y += 1
-			win.addstr(y, 1, "sinr : " + str(sinr))
+			win.addstr(y, 1, "Upload :       " + str(upload), curses.color_pair(1))
+			win.addstr(y, 20, "Mbit/s", curses.color_pair(1))
+			win.addstr(y, 28, bar[0 : upload % 50], curses.color_pair(1)) # Progress bar
 			y += 2
-			win.addstr(y, 1, "Data allowed : " + str(dataAllowed) + " Gbyte")
-			win.addstr(y, 28, bar[0 : int(dataAllowed/3)]) # Progress bar
+			win.addstr(y, 1, "Data allowed : " + str(dataAllowed), curses.color_pair(1))
+			win.addstr(y, 20, "Gbyte", curses.color_pair(1))
+			win.addstr(y, 28, bar[0 : int(dataAllowed/3)], curses.color_pair(1)) # Progress bar
 			y += 1
-			win.addstr(y, 1, "Data used :    " + str(dataUsed) + " Gbyte")
-			win.addstr(y, 28, bar[0 : int(dataUsed/3)]) # Progress bar
+			win.addstr(y, 1, "Data used :    " + str(dataUsed), curses.color_pair(1))
+			win.addstr(y, 20, "Gbyte", curses.color_pair(1))
+			win.addstr(y, 28, bar[0 : int(dataUsed/3)], curses.color_pair(1)) # Progress bar
+			if delta >= 0 :
+				y += 1
+				win.addstr(y, 1, "Available :", curses.color_pair(1) )
+				win.addstr(y, 16, str(delta), curses.color_pair(1))
+				win.addstr(y, 20, "Gbyte", curses.color_pair(1))
+			else :
+				y += 1
+				win.addstr(y, 1, "Over used :    ", curses.color_pair(1) )
+				win.addstr(y, 16, str(-delta), curses.color_pair(2)|curses.A_BOLD)
+				win.addstr(y, 20, "Gbyte", curses.color_pair(1))				
 			y += 2
-			win.addstr(y, 1, "Press enter to quit")
+			win.addstr(y, 1, "Press enter to quit", curses.color_pair(1))
 			y += 1
-			win.addstr(y, 1, "")
+			win.addstr(y, 1, "", curses.color_pair(1))
 			win.refresh()
 			time.sleep(1)
 		curses.endwin()
