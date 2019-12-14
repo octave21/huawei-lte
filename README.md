@@ -18,7 +18,7 @@ chmod u+x lte.py
 
 ## Launch
 ```sh
-./lte.py ip password stat|800|1800|2100|2600
+./lte.py ip password stat|700|800|1800|2100|2600
 ```
 
 ## Examples
