@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.3"
+version = "2.1.4"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -79,10 +79,10 @@ class Stat(Thread) :
 			win.addstr(y, 1, "sinr = " + str(sinr))
 			y += 2
 			win.addstr(y, 1, "Data allowed : " + str(dataAllowed) + " Gbyte")
-			win.addstr(y, 25, bar[0 : dataAllowed]) # Progress bar
+			win.addstr(y, 25, bar[0 : int(dataAllowed/3)]) # Progress bar
 			y += 1
 			win.addstr(y, 1, "Data used :    " + str(dataUsed) + " Gbyte")
-			win.addstr(y, 25, bar[0 : dataUsed]) # Progress bar
+			win.addstr(y, 25, bar[0 : int(dataUsed/3)]) # Progress bar
 			y += 2
 			win.addstr(y, 1, "Press enter to quit")
 			y += 1
