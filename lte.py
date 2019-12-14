@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.7"
+version = "2.1.8"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -111,7 +111,7 @@ class Stat(Thread) :
 # Global variables
 stop = False
 rep = "OK"
-usage = "ip password stat|700|800|1800|2100|2600"
+usage = "ip password stat|700|800|900|1800|2100|2600"
 bandsList = [
     ('b1', 'FDD', '2100', '1'),
     ('b2', 'FDD', '1900', '2'),
@@ -162,6 +162,8 @@ else :
 			exp = int(bandsList[11][0].replace('b', ''))
 		elif bandt == "800" :
 			exp = int(bandsList[9][0].replace('b', '')) 
+		elif bandt == "900" :
+			exp = int(bandsList[7][0].replace('b', '')) 
 		elif bandt == "1800" :
 			exp = int(bandsList[2][0].replace('b', '')) 
 		elif bandt == "2100" :
