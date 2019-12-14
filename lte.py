@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.4"
+version = "2.1.5"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -64,25 +64,25 @@ class Stat(Thread) :
 			win.erase()
 			win.addstr(y, 1, date + " - " + basename(sys.argv[0]) + " (" + version + ")")
 			y += 2
-			win.addstr(y, 1, "Band = " + bandPrint + "Mhz")
+			win.addstr(y, 1, "Band : " + bandPrint + "Mhz")
 			y += 2
 			win.addstr(y, 1, "Download : " + str(download) + " Mbit/s")
-			win.addstr(y, 25, bar[0 : download % 50]) # Progress bar
+			win.addstr(y, 28, bar[0 : download % 50]) # Progress bar
 			y += 1
 			win.addstr(y, 1, "Upload :   " + str(upload) + " Mbit/s")
-			win.addstr(y, 25, bar[0 : upload % 50]) # Progress bar
+			win.addstr(y, 28, bar[0 : upload % 50]) # Progress bar
 			y += 2
-			win.addstr(y, 1, "rsrp = " + str(rsrp))
+			win.addstr(y, 1, "rsrp : " + str(rsrp))
 			y += 1
-			win.addstr(y, 1, "rsrq = " + str(rsrq))
+			win.addstr(y, 1, "rsrq : " + str(rsrq))
 			y += 1
-			win.addstr(y, 1, "sinr = " + str(sinr))
+			win.addstr(y, 1, "sinr : " + str(sinr))
 			y += 2
 			win.addstr(y, 1, "Data allowed : " + str(dataAllowed) + " Gbyte")
-			win.addstr(y, 25, bar[0 : int(dataAllowed/3)]) # Progress bar
+			win.addstr(y, 28, bar[0 : int(dataAllowed/3)]) # Progress bar
 			y += 1
 			win.addstr(y, 1, "Data used :    " + str(dataUsed) + " Gbyte")
-			win.addstr(y, 25, bar[0 : int(dataUsed/3)]) # Progress bar
+			win.addstr(y, 28, bar[0 : int(dataUsed/3)]) # Progress bar
 			y += 2
 			win.addstr(y, 1, "Press enter to quit")
 			y += 1
