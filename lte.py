@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.8"
+version = "2.1.9"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -38,7 +38,7 @@ class Stat(Thread) :
 		curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_RED)
 		win = curses.newwin(20, 120, 0, 0)
 		win.scrollok(1)
-		bar = "##################################################################################"
+		bar = "############################################################################################################"
 		while not stop :
 			bandRead = str(client.net.net_mode()["LTEBand"])
 			if band == -2 :
@@ -65,6 +65,7 @@ class Stat(Thread) :
 			y = 1
 			win.erase()
 			win.addstr(y, 1, date + " - " + basename(sys.argv[0]) + " (" + version + ")", curses.color_pair(1))
+			#win.addstr(y, 1, str(stat), curses.color_pair(1)) # Debug purpose
 			y += 2
 			win.addstr(y, 1, "Band : " + bandPrint + "Mhz", curses.color_pair(1))
 			y += 2
@@ -76,19 +77,19 @@ class Stat(Thread) :
 			y += 2
 			win.addstr(y, 1, "Download :     " + str(download), curses.color_pair(1))
 			win.addstr(y, 20, "Mbit/s", curses.color_pair(1))
-			win.addstr(y, 28, bar[0 : download % 50], curses.color_pair(1)) # Progress bar
+			win.addstr(y, 28, bar[0 : download % 100], curses.color_pair(1)) # Progress bar
 			y += 1
 			win.addstr(y, 1, "Upload :       " + str(upload), curses.color_pair(1))
 			win.addstr(y, 20, "Mbit/s", curses.color_pair(1))
-			win.addstr(y, 28, bar[0 : upload % 50], curses.color_pair(1)) # Progress bar
+			win.addstr(y, 28, bar[0 : upload % 100], curses.color_pair(1)) # Progress bar
 			y += 2
 			win.addstr(y, 1, "Data allowed : " + str(dataAllowed), curses.color_pair(1))
 			win.addstr(y, 20, "Gbyte", curses.color_pair(1))
-			win.addstr(y, 28, bar[0 : int(dataAllowed/3)], curses.color_pair(1)) # Progress bar
+			win.addstr(y, 28, bar[0 : int(dataAllowed/2)], curses.color_pair(1)) # Progress bar
 			y += 1
 			win.addstr(y, 1, "Data used :    " + str(dataUsed), curses.color_pair(1))
 			win.addstr(y, 20, "Gbyte", curses.color_pair(1))
-			win.addstr(y, 28, bar[0 : int(dataUsed/3)], curses.color_pair(1)) # Progress bar
+			win.addstr(y, 28, bar[0 : int(dataUsed/2)], curses.color_pair(1)) # Progress bar
 			if delta >= 0 :
 				y += 1
 				win.addstr(y, 1, "Available :", curses.color_pair(1) )
