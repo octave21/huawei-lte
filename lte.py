@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.10"
+version = "2.1.11"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -40,6 +40,7 @@ class Stat(Thread) :
 		win.scrollok(1)
 		bar = "############################################################################################################"
 		while not stop :
+			# Bande de fréquence
 			bandRead = str(client.net.net_mode()["LTEBand"])
 			if band == -2 :
 				bandPrint = bandRead
