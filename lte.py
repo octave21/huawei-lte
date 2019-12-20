@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.9"
+version = "2.1.10"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -21,7 +21,7 @@ class Keyboard(Thread) :
 	def run(self):
 		"""Running thread code."""
 		stdscr = curses.initscr()
-		s = stdscr.getstr(16,0,1) # Wait for keyboard press
+		s = stdscr.getstr(18,0,1) # Wait for keyboard press
 		stop = True
 
 # Thread statistics loop
@@ -48,13 +48,17 @@ class Stat(Thread) :
 				for bandl in bandsList :
 					if bool(int(bandRead, 16) & int(bandl[3],16)) :
 						bandPrint = bandPrint + bandl[1] + "-" + bandl[2] + " "
-			#print("Band = " + bandPrint + "Mhz, Download : " + str(int(client.monitoring.traffic_statistics()['CurrentDownloadRate'])*8//1000000) + " Mbit/s, Upload : " + str(int(client.monitoring.traffic_statistics()['CurrentUploadRate'])*8//1000000) + " Mbit/s, rsrp = " + str(client.device.signal()["rsrp"]) + ", rsrq = " + str(client.device.signal()["rsrq"]) + ", sinr = " + str(client.device.signal()["sinr"]))
 			# Statistiques
-			download = int(client.monitoring.traffic_statistics()['CurrentDownloadRate'])*8//(1024*1024)
-			upload = int(client.monitoring.traffic_statistics()['CurrentUploadRate'])*8//(1024*1024)
-			rsrp = client.device.signal()["rsrp"]
-			rsrq = client.device.signal()["rsrq"]
-			sinr = client.device.signal()["sinr"]
+			bdw = client.monitoring.traffic_statistics()
+			download = int(bdw['CurrentDownloadRate'])*8//(1024*1024)
+			upload = int(bdw['CurrentUploadRate'])*8//(1024*1024)
+			# Signal
+			sig = client.device.signal()
+			rsrp = sig["rsrp"]
+			rsrq = sig["rsrq"]
+			sinr = sig["sinr"]
+			plmn = sig["plmn"]
+			cell_id = sig["cell_id"]
 			# Data 
 			stat = client.monitoring.month_statistics()
 			dataUsed = int((int(stat["CurrentMonthDownload"]) + int(stat["CurrentMonthUpload"])) / (1024*1024*1024))
@@ -65,15 +69,18 @@ class Stat(Thread) :
 			y = 1
 			win.erase()
 			win.addstr(y, 1, date + " - " + basename(sys.argv[0]) + " (" + version + ")", curses.color_pair(1))
-			#win.addstr(y, 1, str(stat), curses.color_pair(1)) # Debug purpose
 			y += 2
 			win.addstr(y, 1, "Band : " + bandPrint + "Mhz", curses.color_pair(1))
 			y += 2
-			win.addstr(y, 1, "rsrp : " + str(rsrp), curses.color_pair(1))
+			win.addstr(y, 1, "rsrp :         " + str(rsrp), curses.color_pair(1))
 			y += 1
-			win.addstr(y, 1, "rsrq : " + str(rsrq), curses.color_pair(1))
+			win.addstr(y, 1, "rsrq :         " + str(rsrq), curses.color_pair(1))
 			y += 1
-			win.addstr(y, 1, "sinr : " + str(sinr), curses.color_pair(1))
+			win.addstr(y, 1, "sinr :         " + str(sinr), curses.color_pair(1))
+			y += 1
+			win.addstr(y, 1, "cell_id :      " + str(cell_id), curses.color_pair(1))			
+			y += 1
+			win.addstr(y, 1, "plmn :         " + str(plmn), curses.color_pair(1))
 			y += 2
 			win.addstr(y, 1, "Download :     " + str(download), curses.color_pair(1))
 			win.addstr(y, 20, "Mbit/s", curses.color_pair(1))
@@ -104,6 +111,7 @@ class Stat(Thread) :
 			win.addstr(y, 1, "Press enter to quit", curses.color_pair(1))
 			y += 1
 			win.addstr(y, 1, "", curses.color_pair(1))
+			#win.addstr(y, 1, str(client.device.signal()), curses.color_pair(1)) # Debug purpose
 			win.refresh()
 			time.sleep(1)
 		curses.endwin()
