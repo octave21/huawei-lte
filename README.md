@@ -30,7 +30,7 @@ python lte.py 192.168.8.1 myPassword 800
 ![lte](/lte.png)
 ![Bandes](/tableau_bandes-frequences-mobiles.png)
 
-## ping http
+## Ping http
 Shell script which measures the http response time and traces the results in the tracemn.log file.
 * Measurements are spaced one second apart
 * There are 60 measures
