@@ -2,10 +2,11 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.1.11"
+version = "2.2.0"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
+import urllib.request, urllib.parse, urllib.error
 from threading import Thread
 from os.path import basename
 from huawei_lte_api.Client import Client
@@ -20,9 +21,33 @@ class Keyboard(Thread) :
 		Thread.__init__(self)
 	def run(self):
 		"""Running thread code."""
+		global stop
 		stdscr = curses.initscr()
-		s = stdscr.getstr(18,0,1) # Wait for keyboard press
+		s = stdscr.getstr(20,0,1) # Wait for keyboard press
 		stop = True
+
+# Thread ping url
+class Ping(Thread) :
+	"""Thread Ping"""
+	def __init__(self) :
+		"""Initialisation"""
+		Thread.__init__(self)
+	def run(self):
+		"""Running thread code."""
+		global iPing
+		global stop
+		while not stop :
+			try :
+				req= urllib.request.Request(pingUrl)
+				req.add_header('User-Agent', "lte")
+				rep =  (urllib.request.urlopen(req).read()).decode("utf-8")
+				if len(rep) == 0 :
+					iPing = -1
+				else :
+					iPing += 1
+				time.sleep(1)
+			except Exception as e :
+				iPing = -1
 
 # Thread statistics loop
 class Stat(Thread) :
@@ -32,11 +57,12 @@ class Stat(Thread) :
 		Thread.__init__(self)
 	def run(self):
 		"""Running thread code."""
+		global stop
 		stdscr = curses.initscr()
 		curses.start_color()
 		curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
 		curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_RED)
-		win = curses.newwin(20, 120, 0, 0)
+		win = curses.newwin(22, 120, 0, 0)
 		win.scrollok(1)
 		bar = "############################################################################################################"
 		while not stop :
@@ -109,6 +135,12 @@ class Stat(Thread) :
 				win.addstr(y, 16, str(-delta), curses.color_pair(2)|curses.A_BOLD)
 				win.addstr(y, 20, "Gbyte", curses.color_pair(1))				
 			y += 2
+			win.addstr(y, 1, "Ping http : ", curses.color_pair(1))
+			if iPing == -1 :
+				win.addstr(y, 16, "KO", curses.color_pair(1)) # Progress bar
+			else :	
+				win.addstr(y, 28, bar[0 : iPing % 60], curses.color_pair(1)) # Progress bar
+			y += 2
 			win.addstr(y, 1, "Press enter to quit", curses.color_pair(1))
 			y += 1
 			win.addstr(y, 1, "", curses.color_pair(1))
@@ -120,8 +152,9 @@ class Stat(Thread) :
 # Main program
 # Global variables
 stop = False
+iPing = 0
 rep = "OK"
-usage = "ip password stat|700|800|900|1800|2100|2600"
+usage = "ip password stat|700|800|900|1800|2100|2600 [ping url]"
 bandsList = [
     ('b1', 'FDD', '2100', '1'),
     ('b2', 'FDD', '1900', '2'),
@@ -142,16 +175,19 @@ bandsList = [
 ]
 
 # Input parameters
-if (len(sys.argv) != 4) :
+if ((len(sys.argv) != 4) and len(sys.argv) != 5) :
 		print("Usage : " + basename(sys.argv[0]) + " " + usage)
 		print("Examples :")
 		print("lte.py 192.168.8.1 myPassword 800+2100")
 		print("lte.py 192.168.8.1 myPassword stat")
+		print("lte.py 192.168.8.1 myPassword stat https://github.com")
 		rep = "KO"
 		exit()
 ip = sys.argv[1]
 password = sys.argv[2]
 bandIn = sys.argv[3]
+if (len(sys.argv) == 5) :
+	pingUrl = sys.argv[4]
 
 # Date & Version   
 locale.setlocale(locale.LC_ALL, 'fr_FR.utf8') # Heure Française
@@ -203,10 +239,16 @@ except Exception as e :
 
 # Statistics loop
 keyboardThread = Keyboard() # Threads init
+if (len(sys.argv) == 5) :
+	pingThread = Ping()
 statThread = Stat()
 keyboardThread.start() # Threads start
+if (len(sys.argv) == 5) :
+	pingThread.start()
 statThread.start()
 keyboardThread.join() # wait for thread to stop
 stop = True
-statThread.join() # wait for thread to stop
+if (len(sys.argv) == 5) : # wait for thread to stop
+	pingThread.join()
+statThread.join()
 exit()
