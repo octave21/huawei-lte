@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.2.0"
+version = "2.2.1"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -42,12 +42,12 @@ class Ping(Thread) :
 				req.add_header('User-Agent', "lte")
 				rep =  (urllib.request.urlopen(req).read()).decode("utf-8")
 				if len(rep) == 0 :
-					iPing = -1
+					iPing = -2
 				else :
 					iPing += 1
 				time.sleep(1)
 			except Exception as e :
-				iPing = -1
+				iPing = -2
 
 # Thread statistics loop
 class Stat(Thread) :
@@ -136,10 +136,11 @@ class Stat(Thread) :
 				win.addstr(y, 20, "Gbyte", curses.color_pair(1))				
 			y += 2
 			win.addstr(y, 1, "Ping http : ", curses.color_pair(1))
-			if iPing == -1 :
+			if iPing == -2 :
 				win.addstr(y, 16, "KO", curses.color_pair(1)) # Progress bar
-			else :	
-				win.addstr(y, 28, bar[0 : iPing % 60], curses.color_pair(1)) # Progress bar
+			else :
+				win.addstr(y, 16, str(iPing + 1), curses.color_pair(1)) 	
+				win.addstr(y, 28, bar[0 : (iPing % 6) + 1], curses.color_pair(1)) # Progress bar
 			y += 2
 			win.addstr(y, 1, "Press enter to quit", curses.color_pair(1))
 			y += 1
@@ -152,7 +153,7 @@ class Stat(Thread) :
 # Main program
 # Global variables
 stop = False
-iPing = 0
+iPing = -1
 rep = "OK"
 usage = "ip password stat|700|800|900|1800|2100|2600 [ping url]"
 bandsList = [
