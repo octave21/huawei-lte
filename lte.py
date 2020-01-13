@@ -140,7 +140,7 @@ class Stat(Thread) :
 				win.addstr(y, 16, "KO", curses.color_pair(1)) # Progress bar
 			else :
 				win.addstr(y, 16, str(iPing + 1), curses.color_pair(1)) 	
-				win.addstr(y, 28, bar[0 : (iPing % 6) + 1], curses.color_pair(1)) # Progress bar
+				win.addstr(y, 28, bar[0 : (iPing % 60) + 1], curses.color_pair(1)) # Progress bar
 			y += 2
 			win.addstr(y, 1, "Press enter to quit", curses.color_pair(1))
 			y += 1
