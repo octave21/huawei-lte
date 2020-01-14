@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.2.1"
+version = "2.2.2"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -138,6 +138,9 @@ class Stat(Thread) :
 			win.addstr(y, 1, "Ping http : ", curses.color_pair(1))
 			if iPing == -2 :
 				win.addstr(y, 16, "KO", curses.color_pair(1)) # Progress bar
+			elif iPing== -1 :
+				win.addstr(y, 16, "0", curses.color_pair(1)) 	
+				win.addstr(y, 28, bar[0 : 0], curses.color_pair(1)) # Progress bar				
 			else :
 				win.addstr(y, 16, str(iPing + 1), curses.color_pair(1)) 	
 				win.addstr(y, 28, bar[0 : (iPing % 60) + 1], curses.color_pair(1)) # Progress bar
