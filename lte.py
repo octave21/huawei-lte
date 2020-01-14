@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.2.2"
+version = "2.2.3"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -75,6 +75,12 @@ class Stat(Thread) :
 				for bandl in bandsList :
 					if bool(int(bandRead, 16) & int(bandl[3],16)) :
 						bandPrint = bandPrint + bandl[1] + "-" + bandl[2] + " "
+			
+			# Date & Version   
+			locale.setlocale(locale.LC_ALL, 'fr_FR.utf8') # Heure Française
+			date = time.strftime('%d %B %Y - %H:%M:%S',time.localtime())
+			#print(date + " - " + basename(sys.argv[0]) + " : version du %s" %version)
+			
 			# Statistiques
 			bdw = client.monitoring.traffic_statistics()
 			download = int(bdw['CurrentDownloadRate'])*8//(1024*1024)
@@ -192,11 +198,6 @@ password = sys.argv[2]
 bandIn = sys.argv[3]
 if (len(sys.argv) == 5) :
 	pingUrl = sys.argv[4]
-
-# Date & Version   
-locale.setlocale(locale.LC_ALL, 'fr_FR.utf8') # Heure Française
-date = time.strftime('%d %B %Y - %H:%M:%S',time.localtime())
-#print(date + " - " + basename(sys.argv[0]) + " : version du %s" %version)
 
 # Service
 if bandIn == "stat" :
