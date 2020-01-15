@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.2.3"
+version = "2.2.4"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -253,7 +253,7 @@ if (len(sys.argv) == 5) :
 statThread.start()
 keyboardThread.join() # wait for thread to stop
 stop = True
-if (len(sys.argv) == 5) : # wait for thread to stop
-	pingThread.join()
+#if (len(sys.argv) == 5) : # wait for thread to stop
+#	pingThread.join()
 statThread.join()
 exit()
