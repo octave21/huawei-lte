@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.2.4"
+version = "2.2.5"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -103,7 +103,18 @@ class Stat(Thread) :
 			win.erase()
 			win.addstr(y, 1, date + " - " + basename(sys.argv[0]) + " (" + version + ")", curses.color_pair(1))
 			y += 2
-			win.addstr(y, 1, "Band : " + bandPrint + "Mhz", curses.color_pair(1))
+			win.addstr(y, 1, "Ping http : ", curses.color_pair(1))
+			if iPing == -2 :
+				win.addstr(y, 16, "KO", curses.color_pair(1)) # Progress bar
+			elif iPing== -1 :
+				win.addstr(y, 16, "0", curses.color_pair(1)) 	
+				win.addstr(y, 28, bar[0 : 0], curses.color_pair(1)) # Progress bar				
+			else :
+				win.addstr(y, 16, str(iPing + 1), curses.color_pair(1)) 	
+				win.addstr(y, 28, bar[0 : (iPing % 10) + 1], curses.color_pair(1)) # Progress bar
+			y += 2
+			win.addstr(y, 1, "Band : ", curses.color_pair(1))
+			win.addstr(y, 16, bandPrint + "Mhz", curses.color_pair(1))			
 			y += 2
 			win.addstr(y, 1, "rsrp :         " + str(rsrp), curses.color_pair(1))
 			y += 1
@@ -140,16 +151,6 @@ class Stat(Thread) :
 				win.addstr(y, 1, "Over used :    ", curses.color_pair(1) )
 				win.addstr(y, 16, str(-delta), curses.color_pair(2)|curses.A_BOLD)
 				win.addstr(y, 20, "Gbyte", curses.color_pair(1))				
-			y += 2
-			win.addstr(y, 1, "Ping http : ", curses.color_pair(1))
-			if iPing == -2 :
-				win.addstr(y, 16, "KO", curses.color_pair(1)) # Progress bar
-			elif iPing== -1 :
-				win.addstr(y, 16, "0", curses.color_pair(1)) 	
-				win.addstr(y, 28, bar[0 : 0], curses.color_pair(1)) # Progress bar				
-			else :
-				win.addstr(y, 16, str(iPing + 1), curses.color_pair(1)) 	
-				win.addstr(y, 28, bar[0 : (iPing % 60) + 1], curses.color_pair(1)) # Progress bar
 			y += 2
 			win.addstr(y, 1, "Press enter to quit", curses.color_pair(1))
 			y += 1
