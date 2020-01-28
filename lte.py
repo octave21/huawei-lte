@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 # https://github.com/Salamek/huawei-lte-api
 
-version = "2.2.5"
+version = "2.2.6"
 
 #pdb.set_trace() # TRACE
 import sys, pdb, os, base64, time, datetime, locale, traceback, curses 
@@ -36,15 +36,20 @@ class Ping(Thread) :
 		"""Running thread code."""
 		global iPing
 		global stop
+		global timePing
 		while not stop :
 			try :
 				req= urllib.request.Request(pingUrl)
 				req.add_header('User-Agent', "lte")
+				timePing = 0
+				timeStart = time.time()
 				rep =  (urllib.request.urlopen(req).read()).decode("utf-8")
+				timeStop = time.time()
 				if len(rep) == 0 :
 					iPing = -2
 				else :
 					iPing += 1
+					timePing = timeStop - timeStart
 				time.sleep(1)
 			except Exception as e :
 				iPing = -2
@@ -58,6 +63,7 @@ class Stat(Thread) :
 	def run(self):
 		"""Running thread code."""
 		global stop
+		global timePing
 		stdscr = curses.initscr()
 		curses.start_color()
 		curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
@@ -107,10 +113,12 @@ class Stat(Thread) :
 			if iPing == -2 :
 				win.addstr(y, 16, "KO", curses.color_pair(1)) # Progress bar
 			elif iPing== -1 :
-				win.addstr(y, 16, "0", curses.color_pair(1)) 	
+				win.addstr(y, 16, "0", curses.color_pair(1)) 
 				win.addstr(y, 28, bar[0 : 0], curses.color_pair(1)) # Progress bar				
 			else :
 				win.addstr(y, 16, str(iPing + 1), curses.color_pair(1)) 	
+				if timePing != 0 :
+					win.addstr(y, 20, str(int(timePing * 1000)) + " ms", curses.color_pair(1))	
 				win.addstr(y, 28, bar[0 : (iPing % 10) + 1], curses.color_pair(1)) # Progress bar
 			y += 2
 			win.addstr(y, 1, "Band : ", curses.color_pair(1))
@@ -164,6 +172,7 @@ class Stat(Thread) :
 # Global variables
 stop = False
 iPing = -1
+timePing = 0
 rep = "OK"
 usage = "ip password stat|700|800|900|1800|2100|2600 [ping url]"
 bandsList = [
