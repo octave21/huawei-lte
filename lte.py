@@ -101,7 +101,7 @@ class Stat(Thread) :
 			# Data 
 			stat = client.monitoring.month_statistics()
 			dataUsed = int((int(stat["CurrentMonthDownload"]) + int(stat["CurrentMonthUpload"])) / (1024*1024*1024))
-			forfait = int(client.monitoring.start_date()["DataLimit"].replace("GB", ""))	
+			forfait = int(client.monitoring.start_date()["DataLimit"].replace("GB", "").replace("MB", ""))	
 			dataAllowed = int((int(stat["MonthDuration"]) / (60 * 60 * 24)) * forfait / 31)
 			delta = dataAllowed - dataUsed 
 			# Print screen
@@ -174,7 +174,7 @@ stop = False
 iPing = -1
 timePing = 0
 rep = "OK"
-usage = "ip password stat|700|800|900|1800|2100|2600 [ping url]"
+usage = "ip password stat|700|800|900|1800|2100|2300|2600 [ping url]"
 bandsList = [
     ('b1', 'FDD', '2100', '1'),
     ('b2', 'FDD', '1900', '2'),
@@ -229,6 +229,8 @@ else :
 			exp = int(bandsList[2][0].replace('b', '')) 
 		elif bandt == "2100" :
 			exp = int(bandsList[0][0].replace('b', ''))
+		elif bandt == "2300" :
+			exp = int(bandsList[14][0].replace('b', ''))
 		elif bandt == "2600" :
 			exp = int(bandsList[6][0].replace('b', '')) 
 		else :
