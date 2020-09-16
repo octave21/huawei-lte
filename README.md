@@ -16,7 +16,7 @@ pip install -r requirements.txt
 chmod u+x lte.py
 ```
 
-## Launch
+## Run
 ```sh
 ./lte.py ip password stat|700|800|1800|2100|2600
 ```
