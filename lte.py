@@ -83,7 +83,7 @@ class Stat(Thread) :
 						bandPrint = bandPrint + bandl[1] + "-" + bandl[2] + " "
 			
 			# Date & Version   
-			locale.setlocale(locale.LC_ALL, 'fr_FR.utf8') # Heure Française
+			locale.setlocale(locale.LC_ALL, '') # sets locale to user default settings
 			date = time.strftime('%d %B %Y - %H:%M:%S',time.localtime())
 			#print(date + " - " + basename(sys.argv[0]) + " : version du %s" %version)
 			
